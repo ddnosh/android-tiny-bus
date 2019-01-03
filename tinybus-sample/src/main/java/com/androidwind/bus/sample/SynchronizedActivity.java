@@ -2,8 +2,10 @@ package com.androidwind.bus.sample;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 /**
  * @author ddnosh
@@ -11,10 +13,16 @@ import android.widget.Button;
  */
 public class SynchronizedActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private TextView console;
+    private StringBuilder mStringBuilder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_synchronized);
+        mStringBuilder = new StringBuilder();
+        console = findViewById(R.id.tv_output);
+        console.setMovementMethod(ScrollingMovementMethod.getInstance());
         //normal local
         Button btnNormalLocal = findViewById(R.id.btn_normal_local_variables);
         btnNormalLocal.setOnClickListener(this);
@@ -43,6 +51,8 @@ public class SynchronizedActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
+        mStringBuilder.delete(0, mStringBuilder.length());
+        console.setText(mStringBuilder.toString());
         switch (v.getId()) {
             case R.id.btn_normal_local_variables:
                 doWithNormalLocal();
@@ -90,7 +100,14 @@ public class SynchronizedActivity extends AppCompatActivity implements View.OnCl
             for (int i = 0; i < 100; i++) {
                 result++;
                 System.out.println(Thread.currentThread().getName() + " : " + result);
+                mStringBuilder.append(Thread.currentThread().getName() + " : " + result).append("\n");
             }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    console.setText(mStringBuilder.toString());
+                }
+            });
         }
     }
     //1==============================================================================================
@@ -116,7 +133,14 @@ public class SynchronizedActivity extends AppCompatActivity implements View.OnCl
             for (int i = 0; i < 100; i++) {
                 result++;
                 System.out.println(Thread.currentThread().getName() + " : " + result);
+                mStringBuilder.append(Thread.currentThread().getName() + " : " + result).append("\n");
             }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    console.setText(mStringBuilder.toString());
+                }
+            });
         }
     }
     //2==============================================================================================
@@ -143,7 +167,14 @@ public class SynchronizedActivity extends AppCompatActivity implements View.OnCl
             for (int i = 0; i < 100; i++) {
                 result++;
                 System.out.println(Thread.currentThread().getName() + " : " + result);
+                mStringBuilder.append(Thread.currentThread().getName() + " : " + result).append("\n");
             }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    console.setText(mStringBuilder.toString());
+                }
+            });
         }
     }
     //3==============================================================================================
@@ -170,7 +201,14 @@ public class SynchronizedActivity extends AppCompatActivity implements View.OnCl
                 for (int i = 0; i < 100; i++) {
                     result++;
                     System.out.println(Thread.currentThread().getName() + " : " + result);
+                    mStringBuilder.append(Thread.currentThread().getName() + " : " + result).append("\n");
                 }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        console.setText(mStringBuilder.toString());
+                    }
+                });
             }
         }
     }
@@ -219,7 +257,14 @@ public class SynchronizedActivity extends AppCompatActivity implements View.OnCl
                 for (int i = 0; i < 1000; i++) {
                     result++;
                     System.out.println(Thread.currentThread().getName() + " : " + result);
+                    mStringBuilder.append(Thread.currentThread().getName() + " : " + result).append("\n");
                 }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        console.setText(mStringBuilder.toString());
+                    }
+                });
             }
         }
 
@@ -228,7 +273,14 @@ public class SynchronizedActivity extends AppCompatActivity implements View.OnCl
             for (int i = 0; i < 100; i++) {
                 result++;
                 System.out.println(Thread.currentThread().getName() + " with compute : " + result);
+                mStringBuilder.append(Thread.currentThread().getName() + " : " + result).append("\n");
             }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    console.setText(mStringBuilder.toString());
+                }
+            });
         }
 
         private synchronized void simulate() {
@@ -236,7 +288,14 @@ public class SynchronizedActivity extends AppCompatActivity implements View.OnCl
             for (int i = 0; i < 100; i++) {
                 result++;
                 System.out.println(Thread.currentThread().getName() + " with simulate : " + result);
+                mStringBuilder.append(Thread.currentThread().getName() + " : " + result).append("\n");
             }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    console.setText(mStringBuilder.toString());
+                }
+            });
         }
     }
     //5==============================================================================================
@@ -247,7 +306,14 @@ public class SynchronizedActivity extends AppCompatActivity implements View.OnCl
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                TestSynchronizedWithStatic.calculate();
+                final String s = TestSynchronizedWithStatic.calculate(mStringBuilder);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        console.setText(s);
+                    }
+                });
             }
         };
 
@@ -258,14 +324,56 @@ public class SynchronizedActivity extends AppCompatActivity implements View.OnCl
     //6==============================================================================================
 
     private void doWithType1() {
-        final Runnable runnable = new TestRunnable();
+        TestRunnable.result = 0;
+        final TestRunnable runnable = new TestRunnable();
+        runnable.setBusCallBack(new TestRunnable.BusCallBack() {
+            @Override
+            public void getResult(final String content) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        console.setText(content);
+                    }
+                });
+            }
+        });
+        runnable.setSB(mStringBuilder);
         new Thread(runnable).start();
         new Thread(runnable).start();
     }
 
     private void doWithType2() {
-        final Runnable runnable1 = new TestRunnable();
-        final Runnable runnable2 = new TestRunnable();
+        TestRunnable.result = 0;
+        final TestRunnable runnable1 = new TestRunnable();
+        runnable1.setBusCallBack(new TestRunnable.BusCallBack() {
+            @Override
+            public void getResult(final String content) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        console.setText(content);
+                    }
+                });
+            }
+        });
+        runnable1.setSB(mStringBuilder);
+
+        final TestRunnable runnable2 = new TestRunnable();
+        runnable2.setBusCallBack(new TestRunnable.BusCallBack() {
+            @Override
+            public void getResult(final String content) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        console.setText(content);
+                    }
+                });
+            }
+        });
+        runnable2.setSB(mStringBuilder);
 
         new Thread(runnable1).start();
         new Thread(runnable2).start();
