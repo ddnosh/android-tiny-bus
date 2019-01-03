@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SynchronizedActivity">
+
+    <Button
+        android:id="@+id/btn_normal_local_variables"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="normal with local variables"/>
+
+    <Button
+        android:id="@+id/btn_normal_member_variables"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:layout_below="@+id/btn_normal_local_variables"
+        android:text="normal with member variables"/>
+
+    <Button
+        android:id="@+id/btn_non_static_method"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:layout_below="@+id/btn_normal_member_variables"
+        android:text="non-static method"/>
+
+    <Button
+        android:id="@+id/btn_non_static_block"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:layout_below="@+id/btn_non_static_method"
+        android:text="non-static block"/>
+
+    <Button
+        android:id="@+id/btn_non_static_with_method_and_block"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:layout_below="@+id/btn_non_static_block"
+        android:text="non-static with method and block"/>
+
+    <Button
+        android:id="@+id/btn_static"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:textAllCaps="false"
+        android:layout_below="@+id/btn_non_static_with_method_and_block"
+        android:text="static"/>
+
+    <Button
+        android:id="@+id/btn_type1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:textAllCaps="false"
+        android:layout_below="@+id/btn_static"
+        android:text="other type1"/>
+
+    <Button
+        android:id="@+id/btn_type2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:layout_below="@+id/btn_type1"
+        android:text="other type2"/>
+</RelativeLayout>

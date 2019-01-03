@@ -58,6 +58,6 @@ public class TinyBus implements ITinyBus {
 
     @Override
     public void release(Object object) {
-
+        TinyBusManager.getInstance().remove(object.getClass());
     }
 }
