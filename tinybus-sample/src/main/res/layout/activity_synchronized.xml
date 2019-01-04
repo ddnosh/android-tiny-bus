@@ -45,34 +45,48 @@
         android:layout_below="@+id/btn_non_static_block"
         android:text="non-static with method and block"/>
 
-    <Button
-        android:id="@+id/btn_static"
+    <LinearLayout
+        android:id="@+id/ll_other"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:layout_below="@+id/btn_non_static_with_method_and_block"
-        android:text="static"/>
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btn_static"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:text="static"/>
 
-    <Button
-        android:id="@+id/btn_type1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:layout_below="@+id/btn_static"
-        android:text="other type1"/>
+        <Button
+            android:id="@+id/btn_type1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:text="other type1"/>
 
-    <Button
-        android:id="@+id/btn_type2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:layout_below="@+id/btn_type1"
-        android:text="other type2"/>
+        <Button
+            android:id="@+id/btn_type2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:text="other type2"/>
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_output"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/btn_type2"
-        android:scrollbars="vertical" />
+        android:layout_below="@+id/ll_other"
+        android:fadingEdge="vertical"
+        android:fadingEdgeLength="20dp"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:requiresFadingEdge="vertical">
+
+        <TextView
+            android:id="@+id/tv_output"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </ScrollView>
 </RelativeLayout>

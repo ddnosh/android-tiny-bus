@@ -36,4 +36,6 @@
         android:textAllCaps="false"
         android:layout_marginTop="50dp"
         android:text="synchronized demo"/>
+
+    <include layout="@layout/include_description"/>
 </RelativeLayout>
