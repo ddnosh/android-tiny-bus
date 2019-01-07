@@ -1,5 +1,7 @@
 package com.androidwind.bus;
 
+import com.androidwind.task.TinyTaskExecutor;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -30,28 +32,28 @@ public class TinyBus implements ITinyBus {
                 TinyHandler tinyHandler = new TinyHandler();
                 tinyHandler.setMethodName(method.getName());
                 tinyHandler.setObject(object);
+                Subscriber subscriber = method.getAnnotation(Subscriber.class);
+                System.out.println("subscriber = " + subscriber.threadMode());
+                tinyHandler.setThreadMode(subscriber.threadMode());
                 TinyBusManager.getInstance().add(method.getParameterTypes()[0], tinyHandler);
             }
         }
     }
 
     @Override
-    public void post(Object object) {
+    public void post(final Object object) {
         if (object == null) return;
-        TinyHandler tinyHandler = TinyBusManager.getInstance().get(object.getClass());
+        final TinyHandler tinyHandler = TinyBusManager.getInstance().get(object.getClass());
         if (tinyHandler != null && tinyHandler.getObject() != null) {
-            Method method = null;
-            try {
-                method = tinyHandler.getObject().getClass().getMethod(tinyHandler.getMethodName(), new Class[] { object.getClass() });
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            }
-            try {
-                method.invoke(tinyHandler.getObject(), object);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
+            if (tinyHandler.getThreadMode() == ThreadMode.MAIN) {
+                TinyTaskExecutor.postToMainThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        invoke(tinyHandler, object);
+                    }
+                });
+            } else if (tinyHandler.getThreadMode() == ThreadMode.BACKGROUND) {
+                invoke(tinyHandler, object);
             }
         }
     }
@@ -59,5 +61,21 @@ public class TinyBus implements ITinyBus {
     @Override
     public void release(Object object) {
         TinyBusManager.getInstance().remove(object.getClass());
+    }
+
+    private void invoke(TinyHandler tinyHandler, Object object) {
+        Method method = null;
+        try {
+            method = tinyHandler.getObject().getClass().getMethod(tinyHandler.getMethodName(), new Class[] {object.getClass()});
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        try {
+            method.invoke(tinyHandler.getObject(), object);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/tv_hello"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Hello World!" />
 
@@ -17,25 +17,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_hello"
-        android:textAllCaps="false"
-        android:text="post"/>
+        android:text="post"
+        android:textAllCaps="false" />
 
     <Button
         android:id="@+id/btn_release"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btn_post"
-        android:textAllCaps="false"
-        android:text="release"/>
+        android:text="release"
+        android:textAllCaps="false" />
 
     <Button
         android:id="@+id/btn_synchronized"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btn_release"
-        android:textAllCaps="false"
         android:layout_marginTop="50dp"
-        android:text="synchronized demo"/>
+        android:text="synchronized demo"
+        android:textAllCaps="false" />
 
-    <include layout="@layout/include_description"/>
+    <ImageView
+        android:id="@+id/img_hello"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_synchronized" />
+
+    <include layout="@layout/include_description" />
 </RelativeLayout>

@@ -10,6 +10,8 @@ public class TinyHandler {
 
     private Object object;
 
+    private ThreadMode threadMode;
+
     public String getMethodName() {
         return methodName;
     }
@@ -24,5 +26,13 @@ public class TinyHandler {
 
     public void setObject(Object object) {
         this.object = object;
+    }
+
+    public ThreadMode getThreadMode() {
+        return threadMode;
+    }
+
+    public void setThreadMode(ThreadMode threadMode) {
+        this.threadMode = threadMode;
     }
 }

@@ -1,10 +1,11 @@
 package com.androidwind.bus.sample;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.androidwind.bus.Subscriber;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        ((TextView)findViewById(R.id.tv_hello)).setText("");
         switch (v.getId()) {
             case R.id.btn_post:
                 new Thread(new Runnable() {
@@ -40,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }).start();
                 break;
             case R.id.btn_release:
-
+                TinyBus.getInstance().release(this);
                 break;
             case R.id.btn_synchronized:
                 startActivity(new Intent(MainActivity.this, SynchronizedActivity.class));
@@ -54,9 +56,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TinyBus.getInstance().release(this);
     }
 
+//    @Subscriber(threadMode = ThreadMode.MAIN)
     @Subscriber
     public void onEvent(TestEvent event) {
         System.out.println("[onEvent]Current thread id is: " + Thread.currentThread().getId());
-        ((TextView)findViewById(R.id.tv_hello)).setText("OnEvent executed!");
+        ((TextView)findViewById(R.id.tv_hello)).setText("OnEvent executed! "+ Thread.currentThread().getId());
+        ((ImageView)findViewById(R.id.img_hello)).setBackgroundResource(R.mipmap.ic_launcher);
     }
 }

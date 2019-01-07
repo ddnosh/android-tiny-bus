@@ -8,6 +8,7 @@ a tiny event bus for android
 ### Function
 1. as a register and as a poster;
 2. at anywhere we can add @Subscriber to receive the event;
+3. (20190106) we can assign @Subscriber with ThreadMode(Main or Background);
 
 ### Technology
 1. Desing Pattern
@@ -27,5 +28,5 @@ TinyBus.getInstance().post(new TestEvent());
 TinyBus.getInstance().release(this);
 
 ### TODO
-1. different thread switch between recevier and poster;
+1. ~~(done in 20190106) different thread switch between recevier and poster;~~
 
