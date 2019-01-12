@@ -29,4 +29,5 @@ TinyBus.getInstance().release(this);
 
 ### TODO
 1. ~~(done in 20190106) different thread switch between recevier and poster;~~
+2. event priority;
 

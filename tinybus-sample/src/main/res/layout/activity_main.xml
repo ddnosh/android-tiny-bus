@@ -21,10 +21,18 @@
         android:textAllCaps="false" />
 
     <Button
-        android:id="@+id/btn_release"
+        android:id="@+id/btn_post_background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btn_post"
+        android:text="post with ThreadMode.BACKGROUND"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_release"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_post_background"
         android:text="release"
         android:textAllCaps="false" />
 

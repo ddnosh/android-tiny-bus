@@ -2,6 +2,7 @@ package com.androidwind.bus.sample;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -9,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.androidwind.bus.Subscriber;
+import com.androidwind.bus.TestBackgroundEvent;
 import com.androidwind.bus.TestEvent;
+import com.androidwind.bus.ThreadMode;
 import com.androidwind.bus.TinyBus;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -20,6 +23,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         Button btnPost = findViewById(R.id.btn_post);
         btnPost.setOnClickListener(this);
+        Button btnPostBackground = findViewById(R.id.btn_post_background);
+        btnPostBackground.setOnClickListener(this);
         Button btnRelease = findViewById(R.id.btn_release);
         btnRelease.setOnClickListener(this);
         Button btnSynchronized = findViewById(R.id.btn_synchronized);
@@ -30,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        ((TextView)findViewById(R.id.tv_hello)).setText("");
+        ((TextView) findViewById(R.id.tv_hello)).setText("");
         switch (v.getId()) {
             case R.id.btn_post:
                 new Thread(new Runnable() {
@@ -40,6 +45,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         TinyBus.getInstance().post(new TestEvent());
                     }
                 }).start();
+                break;
+            case R.id.btn_post_background:
+                TinyBus.getInstance().post(new TestBackgroundEvent());
                 break;
             case R.id.btn_release:
                 TinyBus.getInstance().release(this);
@@ -56,11 +64,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TinyBus.getInstance().release(this);
     }
 
-//    @Subscriber(threadMode = ThreadMode.MAIN)
+    //    @Subscriber(threadMode = ThreadMode.MAIN)
+    //if the threadMode == ThreadMode.BACKGROUND, you should not update UI in this receiver method
     @Subscriber
     public void onEvent(TestEvent event) {
         System.out.println("[onEvent]Current thread id is: " + Thread.currentThread().getId());
-        ((TextView)findViewById(R.id.tv_hello)).setText("OnEvent executed! "+ Thread.currentThread().getId());
-        ((ImageView)findViewById(R.id.img_hello)).setBackgroundResource(R.mipmap.ic_launcher);
+        if (isMainThread()) {
+            ((TextView) findViewById(R.id.tv_hello)).setText("OnEvent executed! Current thread id is " + Thread.currentThread().getId());
+            ((ImageView) findViewById(R.id.img_hello)).setBackgroundResource(R.mipmap.ic_launcher);
+        }
+    }
+
+    @Subscriber(threadMode = ThreadMode.BACKGROUND)
+    public void onEvent(TestBackgroundEvent event) {
+        System.out.println("[onEvent]Current thread id is: " + Thread.currentThread().getId());
+        if (isMainThread()) {
+            ((TextView) findViewById(R.id.tv_hello)).setText("update in main thread");
+        } else {
+            ((TextView) findViewById(R.id.tv_hello)).setText("update in background thread");
+        }
+    }
+
+    private boolean isMainThread() {
+        return Looper.myLooper() == Looper.getMainLooper();
     }
 }

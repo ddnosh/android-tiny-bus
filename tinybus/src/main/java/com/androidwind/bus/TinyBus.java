@@ -1,5 +1,6 @@
 package com.androidwind.bus;
 
+import com.androidwind.task.SimpleTask;
 import com.androidwind.task.TinyTaskExecutor;
 
 import java.lang.reflect.InvocationTargetException;
@@ -53,7 +54,14 @@ public class TinyBus implements ITinyBus {
                     }
                 });
             } else if (tinyHandler.getThreadMode() == ThreadMode.BACKGROUND) {
-                invoke(tinyHandler, object);
+                TinyTaskExecutor.execute(new SimpleTask() {
+                    @Override
+                    public Object doInBackground() {
+                        System.out.println("[post]Current thread id is: " + Thread.currentThread().getId());
+                        invoke(tinyHandler, object);
+                        return null;
+                    }
+                });
             }
         }
     }
