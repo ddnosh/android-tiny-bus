@@ -1,4 +1,5 @@
 # android-tiny-bus
+[![Download](https://api.bintray.com/packages/ddnosh/maven/tinybus/images/download.svg) ](https://bintray.com/ddnosh/maven/tinybus/_latestVersion)  
 a tiny event bus for android
 
 ### Solution

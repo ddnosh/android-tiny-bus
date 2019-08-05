@@ -54,12 +54,11 @@ public class TinyBus implements ITinyBus {
                     }
                 });
             } else if (tinyHandler.getThreadMode() == ThreadMode.BACKGROUND) {
-                TinyTaskExecutor.execute(new SimpleTask() {
+                TinyTaskExecutor.execute(new Runnable() {
                     @Override
-                    public Object doInBackground() {
+                    public void run() {
                         System.out.println("[post]Current thread id is: " + Thread.currentThread().getId());
                         invoke(tinyHandler, object);
-                        return null;
                     }
                 });
             }
