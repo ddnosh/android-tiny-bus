@@ -37,11 +37,19 @@
         android:textAllCaps="false" />
 
     <Button
+        android:id="@+id/btn_second"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_release"
+        android:text="open another activity"
+        android:textAllCaps="false" />
+
+    <Button
         android:id="@+id/btn_synchronized"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btn_release"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="80dp"
         android:text="synchronized demo"
         android:textAllCaps="false" />
 

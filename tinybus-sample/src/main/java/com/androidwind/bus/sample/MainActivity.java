@@ -14,6 +14,7 @@ import com.androidwind.bus.TestBackgroundEvent;
 import com.androidwind.bus.TestEvent;
 import com.androidwind.bus.ThreadMode;
 import com.androidwind.bus.TinyBus;
+import com.androidwind.task.TinyTaskExecutor;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnPostBackground.setOnClickListener(this);
         Button btnRelease = findViewById(R.id.btn_release);
         btnRelease.setOnClickListener(this);
+        Button btnSecond = findViewById(R.id.btn_second);
+        btnSecond.setOnClickListener(this);
         Button btnSynchronized = findViewById(R.id.btn_synchronized);
         btnSynchronized.setOnClickListener(this);
         TinyBus.getInstance().register(this);
@@ -51,6 +54,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_release:
                 TinyBus.getInstance().release(this);
+                break;
+            case R.id.btn_second:
+                startActivity(new Intent(MainActivity.this, SecondActivity.class));
                 break;
             case R.id.btn_synchronized:
                 startActivity(new Intent(MainActivity.this, SynchronizedActivity.class));
@@ -81,7 +87,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (isMainThread()) {
             ((TextView) findViewById(R.id.tv_hello)).setText("update in main thread");
         } else {
-            ((TextView) findViewById(R.id.tv_hello)).setText("update in background thread");
+            TinyTaskExecutor.postToMainThread(new Runnable() {
+                @Override
+                public void run() {
+                    ((TextView) findViewById(R.id.tv_hello)).setText("update from background thread");
+                }
+            });
         }
     }
 
